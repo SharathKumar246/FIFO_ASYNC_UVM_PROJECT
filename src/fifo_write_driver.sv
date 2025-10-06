@@ -19,7 +19,7 @@ class fifo_write_driver extends uvm_driver #(fifo_write_seq_item);
 virtual task run_phase(uvm_phase phase);
 super.run_phase(phase);
   if(!vif.wrst_n)begin// wait until reset is de-asserted then drive inputs
-        vif.winc <= 1'b0; // Initialize write increment signal
+        // vif.winc <= 1'b0; // Initialize write increment signal
 				`uvm_info(get_type_name(),$sformatf("[%0t] DUT is in RESET=%0b !!!",$time,vif.wrst_n),UVM_LOW)
 				@(posedge vif.wrst_n);
 		end

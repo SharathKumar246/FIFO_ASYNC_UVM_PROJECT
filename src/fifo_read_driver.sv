@@ -17,7 +17,7 @@ endfunction //build_phase
  virtual task run_phase(uvm_phase phase);
     super.run_phase(phase);
     if(!vif.rrst_n)begin// wait until reset is de-asserted then drive inputs
-        vif.rinc <= 1'b0; // Initialize read increment signal
+        // vif.rinc <= 1'b0; // Initialize read increment signal
 				`uvm_info(get_type_name(),$sformatf("[%0t] DUT is in RESET=%0b !!!",$time,vif.rrst_n),UVM_LOW)
 				@(posedge vif.rrst_n);
 		end

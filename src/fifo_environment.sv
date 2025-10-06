@@ -3,6 +3,7 @@ class fifo_environment extends uvm_env;
   fifo_write_active_agent write_agent;
   fifo_read_active_agent read_agent;
   fifo_scoreboard scoreboard;
+  fifo_subscriber subscriber;
   
   // fifo_virtual_sequencer virtual_seqr;
 
@@ -17,6 +18,7 @@ class fifo_environment extends uvm_env;
     write_agent = fifo_write_active_agent::type_id::create("write_agent", this);
     read_agent = fifo_read_active_agent::type_id::create("read_agent", this);
     scoreboard = fifo_scoreboard::type_id::create("scoreboard", this);
+    subscriber = fifo_subscriber::type_id::create("subscriber", this);
     // virtual_seqr = fifo_virtual_sequencer::type_id::create("virtual_seqr", this);
   endfunction
   
@@ -26,7 +28,8 @@ class fifo_environment extends uvm_env;
     // virtual_seqr.read_seqr = read_agent.sequencer;
     write_agent.monitor.item_collected_port.connect(scoreboard.write_fifo.analysis_export);
     read_agent.monitor.item_collected_port.connect(scoreboard.read_fifo.analysis_export);
-    
+    write_agent.monitor.item_collected_port.connect(subscriber.write_fifo.analysis_export);
+    read_agent.monitor.item_collected_port.connect(subscriber.read_fifo.analysis_export);
   endfunction
   
 endclass
