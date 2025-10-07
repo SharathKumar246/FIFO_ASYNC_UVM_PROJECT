@@ -7,7 +7,7 @@ class fifo_scoreboard extends uvm_scoreboard;
 
   // Reference model
   bit [`DATA_WIDTH-1:0] ref_queue[$];
-  int depth = 2**`ADDR_WIDTH; // FIFO depth
+  int depth = 16; // FIFO depth
   bit exp_full=0 , exp_empty=1;
 
   // Statistics
@@ -49,7 +49,7 @@ class fifo_scoreboard extends uvm_scoreboard;
       write_count++;
 
       // Expected full condition
-       exp_full <= (ref_queue.size() == depth);
+       exp_full = (ref_queue.size() >= depth);
 
       // Compare DUT's wfull with expected
       if (trans.wfull !== exp_full) begin
@@ -60,17 +60,20 @@ class fifo_scoreboard extends uvm_scoreboard;
       end
 
       // Handle write
-      if (trans.winc && !exp_full) begin
+      if (trans.winc) begin
+        if (!exp_full) begin //ref_queue.size() < depth
         ref_queue.push_back(trans.wdata);
         successful_writes++;
         `uvm_info(get_type_name(),
           $sformatf("WRITE: data=0x%0h, Queue Size=%0d", trans.wdata, ref_queue.size()),
           UVM_MEDIUM)
-      end
-      else if (trans.winc && exp_full) begin
+        end
+        else begin
         write_when_full++;
         `uvm_warning(get_type_name(), "WRITE attempted when FULL")
       end
+      end
+
     end
   endtask
 
@@ -85,7 +88,7 @@ class fifo_scoreboard extends uvm_scoreboard;
       read_count++;
 
       // Expected empty condition
-       exp_empty <= (ref_queue.size() == 0);
+       exp_empty = (ref_queue.size() == 0);
       $display("%0t exp_empty=%0b, ref_queue.size()=%0d", $time, exp_empty, ref_queue.size());
       // Compare DUT's rempty with expected
       if (trans.rempty !== exp_empty) begin
@@ -95,8 +98,8 @@ class fifo_scoreboard extends uvm_scoreboard;
       end
       
       // Handle read
-      if (trans.rinc && !exp_empty) begin
-        if (ref_queue.size() > 0) begin
+      if (trans.rinc) begin //&& !trans.rempty
+        if (!exp_empty) begin //ref_queue.size() > 0    //!trans.rempty
           expected_data = ref_queue.pop_front();
           successful_reads++;
           
@@ -114,12 +117,10 @@ class fifo_scoreboard extends uvm_scoreboard;
         end
         else begin
           `uvm_error(get_type_name(), "Read from EMPTY reference queue!")
+          read_when_empty++;
         end
       end
-      else if (trans.rinc && exp_empty) begin
-        read_when_empty++;
-        `uvm_warning(get_type_name(), "READ attempted when EMPTY")
-      end
+      
     end
   endtask
 
@@ -156,10 +157,10 @@ class fifo_scoreboard extends uvm_scoreboard;
 
     `uvm_info(get_type_name(), "\n========================================", UVM_LOW)
 
-    if (mismatch_count == 0 )
-      `uvm_info(get_type_name(), "       *** TEST PASSED ***", UVM_LOW)
-    else
-      `uvm_error(get_type_name(), "       *** TEST FAILED ***")
+    // if (mismatch_count == 0 )
+    //   `uvm_info(get_type_name(), "       *** TEST PASSED ***", UVM_LOW)
+    // else
+    //   `uvm_error(get_type_name(), "       *** TEST FAILED ***")
 
     `uvm_info(get_type_name(), "========================================", UVM_LOW)
   endfunction

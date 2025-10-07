@@ -21,7 +21,8 @@ class fifo_read_active_monitor extends uvm_monitor;
   
   task run_phase(uvm_phase phase);
   @(posedge vif.rrst_n); // Wait for reset de-assertion
-    
+
+    repeat(3) @(vif.rmon_cb);
     forever begin
       @(vif.rmon_cb);
 

@@ -40,19 +40,18 @@ module wptr_full #(parameter ADDR_SIZE = 4)(
     //------------------------------------------------------------------
     assign wfull_val = (wgray_next=={~wq2_rptr[ADDR_SIZE:ADDR_SIZE-1], wq2_rptr[ADDR_SIZE-2:0]});
 
-    always @(posedge wclk or negedge wrst_n) begin
-        if (!wrst_n) begin        // Reset the full flag
+    always @(posedge wclk or negedge wrst_n)
+        if (!wrst_n)        // Reset the full flag
             wfull <= 1'b0;
-            $strobe("[DUT wptr_full] Resetting Full Flag to 0");
-        end
-        else begin
+            // $strobe("[DUT wptr_full] Resetting Full Flag to 0");
+       
+        else 
             wfull <= wfull_val; // Update the full flag
-            $display("%0t [DUT wptr_full] Setting wfull <= %b", $time, wfull_val);
-            $display("%0t [DUT wptr_full] winc=%b wptr = %0h, wbin = %0h, wgray_next = %0h, wbin_next = %0h", $time, winc, wptr, wbin, wgray_next, wbin_next);
-            $display("%0t [DEBUG] wbin=%0h wptr=%0h wq2_rptr=%0h wfull_val=%b", 
-         $time, wbin, wptr, wq2_rptr, wfull_val);
-        end
-    end
+        //     $display("%0t [DUT wptr_full] Setting wfull <= %b", $time, wfull_val);
+        //     $display("%0t [DUT wptr_full] winc=%b wptr = %0h, wbin = %0h, wgray_next = %0h, wbin_next = %0h", $time, winc, wptr, wbin, wgray_next, wbin_next);
+        //     $display("%0t [DEBUG] wbin=%0h wptr=%0h wq2_rptr=%0h wfull_val=%b", 
+        //  $time, wbin, wptr, wq2_rptr, wfull_val);
+        
 endmodule
 
 // ---------------------------EXPLANATION---------------------------------

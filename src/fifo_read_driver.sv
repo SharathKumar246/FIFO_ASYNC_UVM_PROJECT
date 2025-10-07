@@ -24,10 +24,10 @@ endfunction //build_phase
      @(vif.rdrv_cb);
     forever begin
       seq_item_port.get_next_item(req);
-      `uvm_info(get_type_name(), $sformatf("Driving Read Transaction:\n%s", req.sprint()), UVM_HIGH)
+      // `uvm_info(get_type_name(), $sformatf("Driving Read Transaction:\n%s", req.sprint()), UVM_HIGH)
       drive_read_item(req);
       // Update transaction with response
-      req.rempty = vif.rempty;
+      // req.rempty = vif.rempty;
       seq_item_port.item_done();
     end
   endtask
@@ -36,7 +36,7 @@ endfunction //build_phase
   
     vif.rinc <= trans.rinc;
     if(trans.rinc && !vif.rempty) begin
-      `uvm_info(get_type_name(), $sformatf("Read: Rinc=%0b, rempty=%0b", trans.rinc, vif.rempty), UVM_MEDIUM)
+      `uvm_info(get_type_name(), $sformatf(" Driving Read: Rinc=%0b, rempty=%0b", trans.rinc, vif.rempty), UVM_MEDIUM)
     end else if(trans.rinc && vif.rempty) begin
       `uvm_info(get_type_name(), "Read attempted but FIFO is EMPTY", UVM_MEDIUM)
     end

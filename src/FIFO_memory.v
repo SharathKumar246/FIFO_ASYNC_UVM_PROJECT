@@ -24,21 +24,19 @@ module FIFO_memory #(parameter DATA_SIZE = 8,
     assign rdata = mem[raddr];          // Read data
 
 
-always@(*) begin 
-    $display("%0t [DUT FIFO_MEMORY] raddr=%0h rdata=%0h", $time, raddr, rdata);
-end
+// always@(*) begin 
+//     $display("%0t [DUT FIFO_MEMORY] raddr=%0h rdata=%0h", $time, raddr, rdata);
+// end
 
     
-     always @(posedge wclk)begin
-        $display("%0t [DUT FIFO_MEMORY] wclk_en=%b wfull=%b", $time, wclk_en, wfull);
+     always @(posedge wclk)
+        // $display("%0t [DUT FIFO_MEMORY] wclk_en=%b wfull=%b", $time, wclk_en, wfull);
          // Write data only if write clock enable is high and FIFO is not full
-        if (wclk_en && !wfull)begin
+        if (wclk_en && !wfull)
              mem[waddr] <= wdata; // Write data
-        $display("%0t [DUT FIFO_MEMORY] Writing Data: wdata = %0h, waddr = %0h", $time, wdata, waddr);
+        // $display("%0t [DUT FIFO_MEMORY] Writing Data: wdata = %0h, waddr = %0h", $time, wdata, waddr);
         // $display("[DUT FIFO_MEMORY] Memory[%0h] = %0h", waddr, mem[waddr]);
-        end
-       
-        end
+    
     
 endmodule
 

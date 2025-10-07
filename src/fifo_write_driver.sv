@@ -23,10 +23,10 @@ super.run_phase(phase);
 				`uvm_info(get_type_name(),$sformatf("[%0t] DUT is in RESET=%0b !!!",$time,vif.wrst_n),UVM_LOW)
 				@(posedge vif.wrst_n);
 		end
-    //  @(vif.wdrv_cb);
+     @(vif.wdrv_cb);
     forever begin
       seq_item_port.get_next_item(req);
-      `uvm_info(get_type_name(), $sformatf("Driving Write Transaction:\n%s", req.sprint()), UVM_HIGH)
+      // `uvm_info(get_type_name(), $sformatf("Driving Write Transaction:\n%s", req.sprint()), UVM_HIGH)
       drive_write_item(req);
       // Update transaction with response
       // req.wfull = vif.wfull;

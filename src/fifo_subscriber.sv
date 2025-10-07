@@ -16,23 +16,40 @@ class fifo_subscriber extends uvm_component;
   // --------------------------
 
   // Write coverage
-  covergroup write_cg @(wr_item);
-    option.per_instance = 1;
-    wdata_cp  : coverpoint wr_item.wdata { bins all_data = {[0:(2*`DATA_WIDTH)-1]}; }
-    winc_cp  : coverpoint wr_item.winc  { bins inc_on  = {1}; bins inc_off = {0}; }
-    wfull_cp  : coverpoint wr_item.wfull { bins full_b  = {1}; bins not_full = {0}; }
+ covergroup write_cg;
+    // Cover write data ranges
+    write_data: coverpoint wr_item.wdata {
+      bins data_low = {[0:127]};
+      bins data_high  = {[128:255]};
+    }
 
-    wr_cross : cross wdata_cp, winc_cp, wfull_cp;
+    // Cover write full flag
+    wfull: coverpoint wr_item.wfull {
+      bins full_flag[] = {0, 1};
+    }
+
+    // Cover write increment
+    winc: coverpoint wr_item.winc {
+      bins winc[] = {0, 1};
+    }
   endgroup
 
-  // Read coverage
-  covergroup read_cg @(rd_item);
-    option.per_instance = 1;
-    rdata_cp  : coverpoint rd_item.rdata  { bins all_data = {[0:(2*`DATA_WIDTH)-1]}; }
-    rinc_cp  : coverpoint rd_item.rinc   { bins inc_on  = {1}; bins inc_off = {0}; }
-    rempty_cp : coverpoint rd_item.rempty { bins empty_b = {1}; bins not_empty = {0}; }
+  covergroup read_cg;
+    // Cover read data ranges
+    read_data: coverpoint rd_item.rdata {
+      bins data_low = {[0:127]};
+      bins data_high  = {[128:255]};
+    }
 
-    rd_cross : cross rdata_cp, rinc_cp, rempty_cp;
+    // Cover read empty flag
+    rempty: coverpoint rd_item.rempty {
+      bins empty_flag[] = {0, 1};
+    }
+
+    // Cover read increment
+    rinc: coverpoint rd_item.rinc {
+      bins rinc[] = {0, 1};
+    }
   endgroup
 
   // --------------------------

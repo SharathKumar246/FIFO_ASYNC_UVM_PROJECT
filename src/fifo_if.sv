@@ -64,4 +64,42 @@ interface fifo_if  (input bit wclk, input bit rclk, input bit wrst_n, input bit 
   //   clocking rmon_cb,
   // );
   
+
+   //Assertions 
+    
+//      property p1;
+//     @(posedge wclk) disable iff(!wrst_n)
+//       winc |=> !wfull;
+//   endproperty
+//   assert property(p1)
+//     else $error("p1 FAILED: Write attempted when FIFO is FULL!");
+
+  property p2;
+    @(posedge wclk) disable iff(!wrst_n)
+      (winc && wfull) |-> $stable(wdata);
+  endproperty
+  assert property(p2)
+    else $error("p2 FAILED: Data changed during write when FULL!");
+
+  property p3;
+    @(posedge rclk) disable iff(!rrst_n)
+      rinc |-> !rempty;
+  endproperty
+  assert property(p3)
+    else $error("p3 FAILED: Read attempted when FIFO is EMPTY!");
+
+  property p4;
+    @(posedge rclk) disable iff(!rrst_n)
+      (rinc && !rempty) |-> !$isunknown(rdata);
+  endproperty
+  assert property(p4)
+    else $error("p4 FAILED: rdata is X/Z on valid read!");
+
+  property p5;
+    @(posedge wclk) disable iff(!wrst_n)
+      !(wfull && rempty);
+  endproperty
+  assert property(p5)
+    else $error("p5 FAILED: FIFO signaled FULL and EMPTY simultaneously!");
+    
 endinterface
