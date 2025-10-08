@@ -17,6 +17,7 @@ class fifo_subscriber extends uvm_component;
 
   // Write coverage
  covergroup write_cg;
+
     // Cover write data ranges
     write_data: coverpoint wr_item.wdata {
       bins data_low = {[0:127]};
