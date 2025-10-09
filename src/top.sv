@@ -5,8 +5,9 @@ import uvm_pkg::*;
 `include "fifo_if.sv"
 `include "FIFO.v"
   `include "fifo_seq_item.sv"
-  `include "fifo_sequence.sv"
   `include "fifo_sequencer.sv"
+  `include "fifo_sequence.sv"
+  // `include "fifo_sequencer.sv"
   `include "fifo_write_driver.sv"
   `include "fifo_read_driver.sv"
   `include "fifo_write_active_monitor.sv"
@@ -35,8 +36,8 @@ module top;
     wrst_n = 1'b0; 
     rrst_n = 1'b0;
 
-intf.rinc = 1'b0;
-intf.winc = 1'b0;
+// intf.rinc = 1'b0;
+// intf.winc = 1'b0;
 
     #20 wrst_n = 1'b1;
     rrst_n = 1'b1;

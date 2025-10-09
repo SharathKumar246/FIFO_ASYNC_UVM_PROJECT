@@ -17,7 +17,7 @@ endfunction //build_phase
  virtual task run_phase(uvm_phase phase);
     super.run_phase(phase);
     if(!vif.rrst_n)begin// wait until reset is de-asserted then drive inputs
-        // vif.rinc <= 1'b0; // Initialize read increment signal
+        vif.rinc <= 1'b0; // Initialize read increment signal
 				`uvm_info(get_type_name(),$sformatf("[%0t] DUT is in RESET=%0b !!!",$time,vif.rrst_n),UVM_LOW)
 				@(posedge vif.rrst_n);
 		end
@@ -35,9 +35,10 @@ endfunction //build_phase
   task drive_read_item(fifo_read_seq_item trans);
   
     vif.rinc <= trans.rinc;
-    if(trans.rinc && !vif.rempty) begin
+    if(trans.rinc)begin//&& !vif.rempty) begin
       `uvm_info(get_type_name(), $sformatf(" Driving Read: Rinc=%0b, rempty=%0b", trans.rinc, vif.rempty), UVM_MEDIUM)
-    end else if(trans.rinc && vif.rempty) begin
+    end 
+    if(trans.rinc && vif.rempty) begin
       `uvm_info(get_type_name(), "Read attempted but FIFO is EMPTY", UVM_MEDIUM)
     end
     @(vif.rdrv_cb);

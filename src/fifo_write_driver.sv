@@ -19,7 +19,7 @@ class fifo_write_driver extends uvm_driver #(fifo_write_seq_item);
 virtual task run_phase(uvm_phase phase);
 super.run_phase(phase);
   if(!vif.wrst_n)begin// wait until reset is de-asserted then drive inputs
-        // vif.winc <= 1'b0; // Initialize write increment signal
+        vif.winc <= 1'b0; // Initialize write increment signal
 				`uvm_info(get_type_name(),$sformatf("[%0t] DUT is in RESET=%0b !!!",$time,vif.wrst_n),UVM_LOW)
 				@(posedge vif.wrst_n);
 		end
@@ -37,12 +37,12 @@ super.run_phase(phase);
 
   task drive_write_item(fifo_write_seq_item req);
     vif.winc <= req.winc;
-    if(req.winc && !vif.wfull) begin
+    if(req.winc )begin//&& !vif.wfull) begin
       vif.wdata <= req.wdata;
-      `uvm_info(get_type_name(), $sformatf("Driver Writing: Data=0x%0h, wfull=%0b", req.wdata, vif.wfull), UVM_MEDIUM)
+      `uvm_info(get_type_name(), $sformatf("Driver Writing: winc=%0b, Data=0x%0h, wfull=%0b", req.winc, req.wdata, vif.wfull), UVM_MEDIUM)
     end 
-    else if(req.winc && vif.wfull) begin
-      `uvm_info(get_type_name(), "Write attempted but FIFO is FULL", UVM_MEDIUM)
+    if(req.winc && vif.wfull) begin
+      `uvm_info(get_type_name(), "Write attempted in driver when FIFO is FULL", UVM_MEDIUM)
     end
     else if(!req.winc) begin
       `uvm_info(get_type_name(), "No Write Operation (winc=0)", UVM_MEDIUM)

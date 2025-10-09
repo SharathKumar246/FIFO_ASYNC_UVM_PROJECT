@@ -254,57 +254,32 @@ endclass
 
 
 
-// class fifo_test_regression extends uvm_test;
-//   `uvm_component_utils(fifo_test_regression)
-//   fifo_environment env;
-//   fifo
 
-//   function new(string name = "fifo_corner_test",uvm_component parent=null);
-//     super.new(name,parent);
-//   endfunction
 
-//   virtual function void build_phase(uvm_phase phase);
-//     super.build_phase(phase);
-//     env = fifo_environment::type_id::create("env", this);
-//   endfunction
+  class fifo_virtual_sequence_test extends uvm_test;
+  `uvm_component_utils(fifo_virtual_sequence_test)
+  fifo_environment env;
+  fifo_virtual_sequence virtual_seq;
 
-//   virtual function void end_of_elaboration_phase(uvm_phase phase);
-//     super.end_of_elaboration_phase(phase);
-//     uvm_top.print_topology();
-//   endfunction
+  function new(string name = "fifo_virtual_sequence_test",uvm_component parent=null);
+      super.new(name,parent);
+  endfunction
 
-//   virtual task run_phase(uvm_phase phase);
-//     super.run_phase(phase);
-//     phase.raise_objection(this);
-//     // Create and start corner case sequences here
-//     phase.drop_objection(this);
-//   endtask
-//   endclass
+  virtual function void build_phase(uvm_phase phase);
+      super.build_phase(phase);
+      env = fifo_environment::type_id::create("env", this);
+      virtual_seq = fifo_virtual_sequence::type_id::create("virtual_seq", this);
+  endfunction
 
-  // class fifo_virtual_sequence_test extends uvm_test;
-  // `uvm_component_utils(fifo_virtual_sequence_test)
-  // fifo_environment env;
-  // fifo_virtual_sequence virtual_seq;
+  virtual function void end_of_elaboration_phase(uvm_phase phase);
+      super.end_of_elaboration_phase(phase);
+      uvm_top.print_topology();
+  endfunction
 
-  // function new(string name = "fifo_virtual_sequence_test",uvm_component parent=null);
-  //     super.new(name,parent);
-  // endfunction
-
-  // virtual function void build_phase(uvm_phase phase);
-  //     super.build_phase(phase);
-  //     env = fifo_environment::type_id::create("env", this);
-  //     virtual_seq = fifo_virtual_sequence::type_id::create("virtual_seq", this);
-  // endfunction
-
-  // virtual function void end_of_elaboration_phase(uvm_phase phase);
-  //     super.end_of_elaboration_phase(phase);
-  //     uvm_top.print_topology();
-  // endfunction
-
-  // virtual task run_phase(uvm_phase phase);
-  //     super.run_phase(phase);
-  //     phase.raise_objection(this);
-  //     virtual_seq.start(env.virtual_seqr);
-  //     phase.drop_objection(this);
-  // endtask
-  // endclass
+  virtual task run_phase(uvm_phase phase);
+      super.run_phase(phase);
+      phase.raise_objection(this);
+      virtual_seq.start(env.virtual_seqr);
+      phase.drop_objection(this);
+  endtask
+  endclass
