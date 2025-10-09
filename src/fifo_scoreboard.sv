@@ -55,7 +55,7 @@ class fifo_scoreboard extends uvm_scoreboard;
       if (trans.wfull !== exp_full) begin
         full_mismatch++;
         `uvm_error(get_type_name(),
-          $sformatf("FULL FLAG MISMATCH: Expected=%0b Got=%0b | Queue Size=%0d",
+          $sformatf("FULL FLAG MISMATCH: Expected=%0b Actual=%0b | Queue Size=%0d",
           exp_full, trans.wfull, ref_queue.size()))
       end
 
@@ -94,7 +94,7 @@ class fifo_scoreboard extends uvm_scoreboard;
       if (trans.rempty !== exp_empty) begin
         empty_mismatch++;
         `uvm_error(get_type_name(),
-          $sformatf("EMPTY FLAG MISMATCH: Expected=%0b Got=%0b | Queue Size=%0d",exp_empty, trans.rempty, ref_queue.size()))
+          $sformatf("EMPTY FLAG MISMATCH: Expected=%0b Actual=%0b | Queue Size=%0d",exp_empty, trans.rempty, ref_queue.size()))
       end
       
       // Handle read
@@ -106,13 +106,13 @@ class fifo_scoreboard extends uvm_scoreboard;
           if (expected_data == trans.rdata) begin
             match_count++;
             `uvm_info(get_type_name(),
-              $sformatf("||||||| MATCH: Exp=0x%0h, Got=0x%0h, Queue Size=%0d |||||||",expected_data, trans.rdata, ref_queue.size()),
+              $sformatf("||||||| MATCH: Exp=0x%0h, Actual=0x%0h, Queue Size=%0d |||||||",expected_data, trans.rdata, ref_queue.size()),
               UVM_MEDIUM)
           end
           else begin
             mismatch_count++;
             `uvm_error(get_type_name(),
-              $sformatf("||||||| DATA MISMATCH: Exp=0x%0h, Got=0x%0h |||||||", expected_data, trans.rdata))
+              $sformatf("||||||| DATA MISMATCH: Exp=0x%0h, Actual=0x%0h |||||||", expected_data, trans.rdata))
           end
         end
         else begin
